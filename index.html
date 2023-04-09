@@ -1,0 +1,976 @@
+<!--This html file can display and read 8 languages for users.
+It uses the microsoft'e edge browser, and microsoft's online speech synthesis enginers.
+So this html works on Edge, not work well on Firefox or Chrome.
+Not work on ipad pro's Safira browser.
+-->
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>8 Languages</title>
+    <!-- <link rel="stylesheet" href="8languages.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="8languages.css">
+  </head>
+  <body>
+    <h1>Learn to Speak 8 Languages</h1>
+
+    <!-- Select Your Language / 请选择你的输入语言 => <br><br> -->
+    <form>
+      <input type="radio" id="english" name="language" value="en-US">
+      <label for="english">English</label>
+
+      <input type="radio" id="chinese" name="language" value="zh-CN" checked>
+      <label for="chinese">Chinese 	&#128681;</label>
+
+      <input type="radio" id="japanese" name="language" value="ja-JP">
+      <label for="japanese">Japanese</label>
+
+      <input type="radio" id="spanish" name="language" value="es-ES">
+      <label for="spanish">Spanish</label>
+
+      <input type="radio" id="french" name="language" value="fr-FR">
+      <label for="french">French</label>
+
+      <input type="radio" id="german" name="language" value="de-DE">
+      <label for="german">German</label>
+
+      <input type="radio" id="russian" name="language" value="ru-RU">
+      <label for="russian">Russian</label>
+
+      <input type="radio" id="arabic" name="language" value="ar-AR">
+      <label for="arabic">Arabic</label>
+    </form>
+
+    <p id=output></p>
+
+    <!-- Record user's speech input and transcribe -->
+    <!-- Alt + 1 to press button for Edge on windows-->
+    <button accesskey="1" onclick="startVoiceInput()">Start Voice Input &#127908;</button>
+
+    <input type="text" id="textInput" placeholder="Type something...">
+
+
+    <!-- Speak user's input text -->
+    <!-- Alt + 2 + s to press button for Edge on windows-->
+    <button accesskey="2" onclick="speak_and_translate()">Speak & Translate</button>
+    <!-- <button onclick="chinese_to_8()">Translate</button> -->
+
+
+
+
+    <!-- Speak multiple languages -->
+    <h6>注意：类真人发音仅在Microsoft Edge适用，不适用于Firefox和Chrome，且需要联网运行</h6>
+    <div id="debug_info"></div>
+    <div id="display"></div>
+    <button onclick="speakEnglish()">Speak English</button>
+    <input type="text" id="EnglishText" placeholder="Display English here...">
+
+    <button onclick="speakChinese()">Speak Chinese</button>
+    <input type="text" id="ChineseText" placeholder="Display Chinese here...">
+    <br><br>
+
+    <button onclick="speakJapanese()">Speak Japanese</button>
+    <input type="text" id="JapaneseText" placeholder="Display Japanese here...">
+
+    <button onclick="speakSpanish()">Speak Spanish</button>
+    <input type="text" id="SpanishText" placeholder="Display Spanish here...">
+    <br><br>
+
+    <button onclick="speakFrench()">Speak French</button>
+    <input type="text" id="FrenchText" placeholder="Display French here...">
+
+    <button onclick="speakGerman()">Speak German</button>
+    <input type="text" id="GermanText" placeholder="Display German here...">
+    <br><br>
+
+    <button onclick="speakRussian()">Speak Russian</button>
+    <input type="text" id="RussianText" placeholder="Display Russian here...">
+
+    <button onclick="speakArabic()">Speak Arabic</button>
+    <input type="text" id="ArabicText" placeholder="Display Arabic here...">
+    <br><br>
+
+
+    <!-- Load json format sentence into multilingual speak dialogues -->
+    <button onclick="loadSentence()" id="1">Welcome</button>
+    <button onclick="loadSentence()" id="2">Thanks</button>
+    <button onclick="loadSentence()" id="3">Good</button>
+    <button onclick="loadSentence()" id="4">Enjoy</button>
+    <button onclick="loadSentence()" id="5">Fine</button>
+    <button onclick="loadSentence()" id="6">Congratulations</button>
+    <button onclick="loadSentence()" id="7">I hate you</button>
+    <button onclick="loadSentence()" id="8">I love you</button>
+    <button onclick="loadSentence()" id="9">I’m in love</button>
+    <button onclick="loadSentence()" id="10">I’m sorry</button>
+    <button onclick="loadSentence()" id="11">I’m so sorry</button>
+    <button onclick="loadSentence()" id="12">I’m yours</button>
+    <button onclick="loadSentence()" id="13">Thanks again</button>
+    <button onclick="loadSentence()" id="14">How are you</button>
+    <button onclick="loadSentence()" id="15">I am fine</button>
+    <button onclick="loadSentence()" id="16">Take care</button>
+    <button onclick="loadSentence()" id="17">I miss you</button>
+    <button onclick="loadSentence()" id="18">You’re nice</button>
+    <button onclick="loadSentence()" id="19">That’s terrible</button>
+    <button onclick="loadSentence()" id="20">That’s too bad</button>
+    <button onclick="loadSentence()" id="21">That’s too much</button>
+    <button onclick="loadSentence()" id="22">See you</button>
+    <button onclick="loadSentence()" id="23">Thank you</button>
+    <button onclick="loadSentence()" id="24">Thank you sir</button>
+    <button onclick="loadSentence()" id="25">Are you free</button>
+    <button onclick="loadSentence()" id="26">No problem</button>
+    <button onclick="loadSentence()" id="27">Get well soon</button>
+    <button onclick="loadSentence()" id="28">Very good</button>
+    <button onclick="loadSentence()" id="29">Well done</button>
+    <button onclick="loadSentence()" id="30">What’s up</button>
+    <button onclick="loadSentence()" id="31">I can’t hear you</button>
+    <button onclick="loadSentence()" id="32">I can’t stop</button>
+    <button onclick="loadSentence()" id="33">I know</button>
+    <button onclick="loadSentence()" id="34">Good bye</button>
+    <button onclick="loadSentence()" id="35">Good idea</button>
+    <button onclick="loadSentence()" id="36">Good luck</button>
+    <button onclick="loadSentence()" id="37">You are late</button>
+    <button onclick="loadSentence()" id="38">Who is next?</button>
+    <button onclick="loadSentence()" id="39">Who is she?</button>
+    <button onclick="loadSentence()" id="40">Who is that man?</button>
+    <button onclick="loadSentence()" id="41">Who built it?</button>
+    <button onclick="loadSentence()" id="42">They hurt</button>
+    <button onclick="loadSentence()" id="43">She got angry</button>
+    <button onclick="loadSentence()" id="44">She is a teacher</button>
+    <button onclick="loadSentence()" id="45">She is aggressive</button>
+    <button onclick="loadSentence()" id="46">She is attractive</button>
+    <button onclick="loadSentence()" id="47">She is beautiful</button>
+    <button onclick="loadSentence()" id="48">She is crying</button>
+    <button onclick="loadSentence()" id="49">She is happy</button>
+    <button onclick="loadSentence()" id="50">No way!</button>
+    <button onclick="loadSentence()" id="51">No worries</button>
+    <button onclick="loadSentence()" id="52">No, thank you</button>
+    <button onclick="loadSentence()" id="53">I’m so happy</button>
+    <button onclick="loadSentence()" id="54">I’m hungry</button>
+    <button onclick="loadSentence()" id="55">I’m able to run</button>
+    <button onclick="loadSentence()" id="56">I agree</button>
+    <button onclick="loadSentence()" id="57">I can swim</button>
+    <button onclick="loadSentence()" id="58">I can’t come</button>
+    <button onclick="loadSentence()" id="59">He got angry</button>
+    <button onclick="loadSentence()" id="60">He was alone</button>
+    <button onclick="loadSentence()" id="61">He was brave</button>
+    <button onclick="loadSentence()" id="62">He likes to swim</button>
+    <button onclick="loadSentence()" id="63">Don’t be angry</button>
+    <button onclick="loadSentence()" id="64">Don’t be sad</button>
+    <button onclick="loadSentence()" id="65">Don’t cry</button>
+    <button onclick="loadSentence()" id="66">Come in</button>
+    <button onclick="loadSentence()" id="67">Come on</button>
+    <button onclick="loadSentence()" id="68">Can you come?</button>
+    <button onclick="loadSentence()" id="69">Can I help?</button>
+    <button onclick="loadSentence()" id="70">Can I eat this?</button>
+    <button onclick="loadSentence()" id="71">Can I help you?</button>
+    <button onclick="loadSentence()" id="72">Can I see?</button>
+    <button onclick="loadSentence()" id="73">Are you going?</button>
+    <button onclick="loadSentence()" id="74">Are you hungry?</button>
+    <button onclick="loadSentence()" id="75">Are you mad?</button>
+    <button onclick="loadSentence()" id="76">Are you serious?</button>
+    <button onclick="loadSentence()" id="77">Are you sleeping?</button>
+    <button onclick="loadSentence()" id="78">Can you do this?</button>
+    <button onclick="loadSentence()" id="79">Can you help me?</button>
+    <button onclick="loadSentence()" id="80">Can you tell me?</button>
+    <button onclick="loadSentence()" id="81">Come on tomorrow</button>
+    <button onclick="loadSentence()" id="82">Come quickly</button>
+    <button onclick="loadSentence()" id="83">Could I help you?</button>
+    <button onclick="loadSentence()" id="84">Could you tell me?</button>
+    <button onclick="loadSentence()" id="85">Do not disturb!</button>
+    <button onclick="loadSentence()" id="86">Do you hear me?</button>
+    <button onclick="loadSentence()" id="87">Do you smoke?</button>
+    <button onclick="loadSentence()" id="88">Have you eaten?</button>
+    <button onclick="loadSentence()" id="89">Have you finished?</button>
+    <button onclick="loadSentence()" id="90">He can run fast</button>
+    <button onclick="loadSentence()" id="91">He began to run</button>
+    <button onclick="loadSentence()" id="92">He did not speak</button>
+    <button onclick="loadSentence()" id="93">His eyes are blue</button>
+    <button onclick="loadSentence()" id="94">His smile was good</button>
+    <button onclick="loadSentence()" id="95">How is your life?</button>
+    <button onclick="loadSentence()" id="96">How is your family?</button>
+    <button onclick="loadSentence()" id="97">I am a student</button>
+    <button onclick="loadSentence()" id="98">I am going to study</button>
+    <button onclick="loadSentence()" id="99">I am not a teacher</button>
+    <button onclick="loadSentence()" id="100">I am sorry</button>
+    <button onclick="loadSentence()" id="101">I believe you</button>
+    <button onclick="loadSentence()" id="102">I can do this job</button>
+    <button onclick="loadSentence()" id="103">I can run faster</button>
+    <button onclick="loadSentence()" id="104">I can’t believe it</button>
+    <button onclick="loadSentence()" id="105">It happens</button>
+    <button onclick="loadSentence()" id="106">It is new</button>
+    <button onclick="loadSentence()" id="107">It is a long story</button>
+    <button onclick="loadSentence()" id="108">It looks like an bird</button>
+    <button onclick="loadSentence()" id="109">It really takes time</button>
+    <button onclick="loadSentence()" id="110">It was really cheap</button>
+    <button onclick="loadSentence()" id="111">It was so noisy</button>
+    <button onclick="loadSentence()" id="112">It was very difficult</button>
+    <button onclick="loadSentence()" id="113">It wasn’t expensive</button>
+    <button onclick="loadSentence()" id="114">It wasn’t necessary</button>
+    <button onclick="loadSentence()" id="115">Let me check</button>
+    <button onclick="loadSentence()" id="116">Let me say</button>
+    <button onclick="loadSentence()" id="117">Let me see</button>
+    <button onclick="loadSentence()" id="118">May I come in?</button>
+    <button onclick="loadSentence()" id="119">May I help you?</button>
+    <button onclick="loadSentence()" id="120">May I join you?</button>
+    <button onclick="loadSentence()" id="121">May I speak?</button>
+    <button onclick="loadSentence()" id="122">May I eat this?</button>
+    <button onclick="loadSentence()" id="123">My father is tall</button>
+    <button onclick="loadSentence()" id="124">My sister has a job</button>
+    <button onclick="loadSentence()" id="125">My sister is famous</button>
+    <button onclick="loadSentence()" id="126">My wife is a doctor</button>
+    <button onclick="loadSentence()" id="127">No problem</button>
+    <button onclick="loadSentence()" id="128">No, I’ll eat later</button>
+    <button onclick="loadSentence()" id="129">Please come in</button>
+    <button onclick="loadSentence()" id="130">Please do that again</button>
+    <button onclick="loadSentence()" id="131">Please give me</button>
+    <button onclick="loadSentence()" id="132">She admired him</button>
+    <button onclick="loadSentence()" id="133">She avoids me</button>
+    <button onclick="loadSentence()" id="134">She came last</button>
+    <button onclick="loadSentence()" id="135">She goes to school</button>
+    <button onclick="loadSentence()" id="136">That house is big</button>
+    <button onclick="loadSentence()" id="137">That is a good idea</button>
+    <button onclick="loadSentence()" id="138">That is my book</button>
+    <button onclick="loadSentence()" id="139">That is my son</button>
+    <button onclick="loadSentence()" id="140">The dog is dead</button>
+    <button onclick="loadSentence()" id="141">The river is wide</button>
+    <button onclick="loadSentence()" id="142">There is no doubt</button>
+    <button onclick="loadSentence()" id="143">They are playing</button>
+    <button onclick="loadSentence()" id="144">They are pretty</button>
+    <button onclick="loadSentence()" id="145">They got married</button>
+    <button onclick="loadSentence()" id="146">They have few books</button>
+    <button onclick="loadSentence()" id="147">They stopped talking</button>
+    <button onclick="loadSentence()" id="148">This is my friend</button>
+    <button onclick="loadSentence()" id="149">This bird can’t fly</button>
+    <button onclick="loadSentence()" id="150">This decision is final</button>
+    <button onclick="loadSentence()" id="151">This is my book</button>
+    <button onclick="loadSentence()" id="152">This is my brother</button>
+    <button onclick="loadSentence()" id="153">This is my daughter</button>
+    <button onclick="loadSentence()" id="154">This is not a joke</button>
+    <button onclick="loadSentence()" id="155">This is surprising</button>
+    <button onclick="loadSentence()" id="156">This river is beautiful</button>
+    <button onclick="loadSentence()" id="157">This story is true</button>
+    <button onclick="loadSentence()" id="158">We are happy</button>
+    <button onclick="loadSentence()" id="159">Will it rain today?</button>
+    <button onclick="loadSentence()" id="160">Will you go on a trip?</button>
+    <button onclick="loadSentence()" id="161">Will she come?</button>
+    <button onclick="loadSentence()" id="162">Would you kill me?</button>
+    <button onclick="loadSentence()" id="163">Would you love me?</button>
+    <button onclick="loadSentence()" id="164">Would you come here?</button>
+    <button onclick="loadSentence()" id="165">You are a teacher</button>
+    <button onclick="loadSentence()" id="166">You are very beautiful</button>
+    <button onclick="loadSentence()" id="167">You are very brave</button>
+    <button onclick="loadSentence()" id="168">You broke the rules</button>
+    <button onclick="loadSentence()" id="169">You love me</button>
+    <button onclick="loadSentence()" id="170">you love me or not</button>
+    <button onclick="loadSentence()" id="171">You make me happy</button>
+    <button onclick="loadSentence()" id="172">You may go</button>
+    <button onclick="loadSentence()" id="173">You should sleep</button>
+    <button onclick="loadSentence()" id="174">You must study hard</button>
+    <button onclick="loadSentence()" id="175">Whose idea is this?</button>
+    <button onclick="loadSentence()" id="176">Thanks for your help</button>
+    <button onclick="loadSentence()" id="177">Thank you for coming</button>
+    <button onclick="loadSentence()" id="178">How about you</button>
+    <button onclick="loadSentence()" id="179">How is your family</button>
+    <button onclick="loadSentence()" id="180">How to Say</button>
+    <button onclick="loadSentence()" id="181">Good morning</button>
+    <button onclick="loadSentence()" id="182">Good afternoon</button>
+    <button onclick="loadSentence()" id="183">Good evening</button>
+    <button onclick="loadSentence()" id="184">Good night</button>
+    <button onclick="loadSentence()" id="185">Happy birthday</button>
+    <button onclick="loadSentence()" id="186">Happy Christmas</button>
+    <button onclick="loadSentence()" id="187">Happy new year</button>
+    <button onclick="loadSentence()" id="188">Good to see you</button>
+    <button onclick="loadSentence()" id="189">I don’t like it</button>
+    <button onclick="loadSentence()" id="190">I have no idea</button>
+    <button onclick="loadSentence()" id="191">I know everything</button>
+    <button onclick="loadSentence()" id="192">I know something</button>
+    <button onclick="loadSentence()" id="193">Thank you so much</button>
+    <button onclick="loadSentence()" id="194">Thanks a million</button>
+    <button onclick="loadSentence()" id="195">See you later</button>
+    <button onclick="loadSentence()" id="196">See you next week</button>
+    <button onclick="loadSentence()" id="197">See you next year</button>
+    <button onclick="loadSentence()" id="198">See you soon</button>
+    <button onclick="loadSentence()" id="199">See you tomorrow</button>
+    <button onclick="loadSentence()" id="200">Sweet dreams</button>
+    <button onclick="loadSentence()" id="201">I’m crazy about you</button>
+    <button onclick="loadSentence()" id="202">I’m crazy with you</button>
+    <button onclick="loadSentence()" id="203">Nice to meet you</button>
+    <button onclick="loadSentence()" id="204">It’s very cheap</button>
+    <button onclick="loadSentence()" id="205">Just a moment</button>
+    <button onclick="loadSentence()" id="206">Not necessarily</button>
+    <button onclick="loadSentence()" id="207">That’s a good deal</button>
+    <button onclick="loadSentence()" id="208">You’re beautiful</button>
+    <button onclick="loadSentence()" id="209">You’re very nice</button>
+    <button onclick="loadSentence()" id="210">You’re very smart</button>
+    <button onclick="loadSentence()" id="211">I really appreciate it</button>
+    <button onclick="loadSentence()" id="212">I really miss you</button>
+    <button onclick="loadSentence()" id="213">What is your name</button>
+    <button onclick="loadSentence()" id="214">Which is correct?</button>
+    <button onclick="loadSentence()" id="215">Will you please help me?</button>
+    <button onclick="loadSentence()" id="216">Will you stay at home?</button>
+    <button onclick="loadSentence()" id="217">Do you need anything?</button>
+    <button onclick="loadSentence()" id="218">Do you need this book?</button>
+    <button onclick="loadSentence()" id="219">Are you feeling better?</button>
+    <button onclick="loadSentence()" id="220">Are you writing a letter?</button>
+    <button onclick="loadSentence()" id="221">Come and see me now</button>
+    <button onclick="loadSentence()" id="222">Come with your family</button>
+    <button onclick="loadSentence()" id="223">I’m very busy this week</button>
+    <button onclick="loadSentence()" id="224">There is a lot of money</button>
+    <button onclick="loadSentence()" id="225">They are good people</button>
+    <button onclick="loadSentence()" id="226">We need some money</button>
+    <button onclick="loadSentence()" id="227">What is your destination?</button>
+    <button onclick="loadSentence()" id="228">What are you doing today?</button>
+    <button onclick="loadSentence()" id="229">What are you reading?</button>
+    <button onclick="loadSentence()" id="230">What can I do for you?</button>
+    <button onclick="loadSentence()" id="231">What is the problem?</button>
+    <button onclick="loadSentence()" id="232">What is the story?</button>
+    <button onclick="loadSentence()" id="233">What is your problem?</button>
+    <button onclick="loadSentence()" id="234">What was that noise?</button>
+    <button onclick="loadSentence()" id="235">When can we eat?</button>
+    <button onclick="loadSentence()" id="236">When do you study?</button>
+    <button onclick="loadSentence()" id="237">When was it finished?</button>
+    <button onclick="loadSentence()" id="238">How about your family</button>
+    <button onclick="loadSentence()" id="239">Do you understand?</button>
+    <button onclick="loadSentence()" id="240">Do you love me?</button>
+    <button onclick="loadSentence()" id="241">Don’t talk about work</button>
+    <button onclick="loadSentence()" id="242">How can I help you?</button>
+    <button onclick="loadSentence()" id="243">How deep is the lake?</button>
+    <button onclick="loadSentence()" id="244">I’m not disturbing you</button>
+    <button onclick="loadSentence()" id="245">I’m proud of my son</button>
+    <button onclick="loadSentence()" id="246">I’m sorry to disturb you</button>
+    <button onclick="loadSentence()" id="247">Is something wrong?</button>
+    <button onclick="loadSentence()" id="248">May I open the door?</button>
+    <button onclick="loadSentence()" id="249">Thanks for everything</button>
+    <button onclick="loadSentence()" id="250">This is very difficult</button>
+    <button onclick="loadSentence()" id="251">This is very important</button>
+    <button onclick="loadSentence()" id="252">Where are you from</button>
+    <button onclick="loadSentence()" id="253">Do you have any idea</button>
+    <button onclick="loadSentence()" id="254">I love you so much</button>
+    <button onclick="loadSentence()" id="255">I love you very much</button>
+    <button onclick="loadSentence()" id="256">I’m in love with you</button>
+    <button onclick="loadSentence()" id="257">I missed you so much</button>
+    <button onclick="loadSentence()" id="258">Let me think about it</button>
+    <button onclick="loadSentence()" id="259">Thank you very much</button>
+    <button onclick="loadSentence()" id="260">I can’t stop thinking</button>
+    <button onclick="loadSentence()" id="261">Will you stop talking?</button>
+    <button onclick="loadSentence()" id="262">Would you like to go?</button>
+    <button onclick="loadSentence()" id="263">Would you teach me?</button>
+    <button onclick="loadSentence()" id="264">Where is your room?</button>
+    <button onclick="loadSentence()" id="265">Where should we go?</button>
+    <button onclick="loadSentence()" id="266">Where is your house?</button>
+    <button onclick="loadSentence()" id="267">Please close the door</button>
+    <button onclick="loadSentence()" id="268">She agreed to my idea</button>
+    <button onclick="loadSentence()" id="269">That boy is intelligent</button>
+    <button onclick="loadSentence()" id="270">It was a very big room</button>
+    <button onclick="loadSentence()" id="271">He can swim very fast</button>
+    <button onclick="loadSentence()" id="272">He accepted my idea</button>
+    <button onclick="loadSentence()" id="273">They loved each other</button>
+    <button onclick="loadSentence()" id="274">When will you reach?</button>
+    <button onclick="loadSentence()" id="275">Where are you from?</button>
+    <button onclick="loadSentence()" id="276">Where are you going?</button>
+    <button onclick="loadSentence()" id="277">We love each other</button>
+    <button onclick="loadSentence()" id="278">We obeyed the rules</button>
+    <button onclick="loadSentence()" id="279">We started to walk</button>
+    <button onclick="loadSentence()" id="280">We will never agree</button>
+    <button onclick="loadSentence()" id="281">We can make change</button>
+    <button onclick="loadSentence()" id="282">We cook everyday</button>
+    <button onclick="loadSentence()" id="283">We enjoyed it</button>
+    <button onclick="loadSentence()" id="284">What about you?</button>
+    <button onclick="loadSentence()" id="285">What are you doing?</button>
+    <button onclick="loadSentence()" id="286">What did you say?</button>
+    <button onclick="loadSentence()" id="287">What do you need?</button>
+    <button onclick="loadSentence()" id="288">What do you think?</button>
+    <button onclick="loadSentence()" id="289">What do you want?</button>
+    <button onclick="loadSentence()" id="290">What happened?</button>
+    <button onclick="loadSentence()" id="291">What is that?</button>
+    <button onclick="loadSentence()" id="292">When was she born?</button>
+    <button onclick="loadSentence()" id="293">When will we arrive?</button>
+    <button onclick="loadSentence()" id="294">Where are you?</button>
+    <button onclick="loadSentence()" id="295">Where does it hurt?</button>
+    <button onclick="loadSentence()" id="296">Where is my book?</button>
+    <button onclick="loadSentence()" id="297">Where is the river?</button>
+    <button onclick="loadSentence()" id="298">Who broke this?</button>
+    <button onclick="loadSentence()" id="299">Why are you crying?</button>
+    <button onclick="loadSentence()" id="300">I can’t see anything</button>
+    <button onclick="loadSentence()" id="301">I disagree with you</button>
+    <button onclick="loadSentence()" id="302">I like it very much</button>
+    <button onclick="loadSentence()" id="303">I need more time</button>
+    <button onclick="loadSentence()" id="304">I want to sleep</button>
+    <button onclick="loadSentence()" id="305">I’m able to swim</button>
+    <button onclick="loadSentence()" id="306">I’m not a doctor</button>
+    <button onclick="loadSentence()" id="307">I’m taller than you</button>
+    <button onclick="loadSentence()" id="308">I’m very sad</button>
+    <button onclick="loadSentence()" id="309">Is he a teacher?</button>
+    <button onclick="loadSentence()" id="310">Is she married?</button>
+    <button onclick="loadSentence()" id="311">Is this book yours?</button>
+    <button onclick="loadSentence()" id="312">Let’s ask the teacher</button>
+    <button onclick="loadSentence()" id="313">Let’s go out and eat</button>
+    <button onclick="loadSentence()" id="314">Let’s go to a movie</button>
+    <button onclick="loadSentence()" id="315">His opinion was not accepted</button>
+    <button onclick="loadSentence()" id="316">His proposals were adopted at the meeting</button>
+    <button onclick="loadSentence()" id="317">How do you come to school?</button>
+    <button onclick="loadSentence()" id="318">If I had money, I could buy it</button>
+    <button onclick="loadSentence()" id="319">If you want a pencil, I’ll lend you one</button>
+    <button onclick="loadSentence()" id="320">If he comes, ask him to wait</button>
+    <button onclick="loadSentence()" id="321">If it rains, we will get wet</button>
+    <button onclick="loadSentence()" id="322">If I studied, I would pass the exam</button>
+    <button onclick="loadSentence()" id="323">My hair has grown too long</button>
+    <button onclick="loadSentence()" id="324">My mother is always at home</button>
+    <button onclick="loadSentence()" id="325">There are many fish in this lake</button>
+    <button onclick="loadSentence()" id="326">There are many problems to solve</button>
+    <button onclick="loadSentence()" id="327">There are some books on the desk</button>
+    <button onclick="loadSentence()" id="328">There is nothing wrong with him</button>
+    <button onclick="loadSentence()" id="329">There was a sudden change in the weather</button>
+    <button onclick="loadSentence()" id="330">There was nobody in the garden</button>
+    <button onclick="loadSentence()" id="331">There was nobody there</button>
+    <button onclick="loadSentence()" id="332">There were five murders this month</button>
+    <button onclick="loadSentence()" id="333">They admire each other</button>
+    <button onclick="loadSentence()" id="334">They agreed to work together</button>
+    <button onclick="loadSentence()" id="335">They are both good teachers</button>
+    <button onclick="loadSentence()" id="336">We want something new</button>
+    <button onclick="loadSentence()" id="337">We should be very careful</button>
+    <button onclick="loadSentence()" id="338">When can I see you next time?</button>
+    <button onclick="loadSentence()" id="339">When did you finish the work?</button>
+    <button onclick="loadSentence()" id="340">When will you harvest your wheat?</button>
+    <button onclick="loadSentence()" id="341">Where do you want to go?</button>
+    <button onclick="loadSentence()" id="342">Where is the pretty girl?</button>
+    <button onclick="loadSentence()" id="343">Which food do you like?</button>
+    <button onclick="loadSentence()" id="344">Which is more important?</button>
+    <button onclick="loadSentence()" id="345">Which one is more expensive?</button>
+    <button onclick="loadSentence()" id="346">Which way is the nearest?</button>
+    <button onclick="loadSentence()" id="347">Which is your favorite team?</button>
+    <button onclick="loadSentence()" id="348">Which languages do you speak?</button>
+    <button onclick="loadSentence()" id="349">Which team will win the game?</button>
+    <button onclick="loadSentence()" id="350">Why are you drying your hair?</button>
+    <button onclick="loadSentence()" id="351">Why are you late?</button>
+    <button onclick="loadSentence()" id="352">Why did you get so angry?</button>
+    <button onclick="loadSentence()" id="353">Why did you quit?</button>
+    <button onclick="loadSentence()" id="354">Why don’t you come in?</button>
+    <button onclick="loadSentence()" id="355">Why were you late this morning?</button>
+    <button onclick="loadSentence()" id="356">Why are you so tired today?</button>
+    <button onclick="loadSentence()" id="357">Would you like to dance with me?</button>
+    <button onclick="loadSentence()" id="358">Would you come tomorrow?</button>
+    <button onclick="loadSentence()" id="359">You are always complaining</button>
+    <button onclick="loadSentence()" id="360">Thanks for your explanation</button>
+    <button onclick="loadSentence()" id="361">Thanks for the compliment</button>
+    <button onclick="loadSentence()" id="362">Thanks for the information</button>
+    <button onclick="loadSentence()" id="363">Thanks for your understanding</button>
+    <button onclick="loadSentence()" id="364">Thank you for supporting me</button>
+    <button onclick="loadSentence()" id="365">I really miss you so much</button>
+    <button onclick="loadSentence()" id="366">Happy valentine’s day</button>
+    <button onclick="loadSentence()" id="367">Whose decision was final?</button>
+    <button onclick="loadSentence()" id="368">Whose life is in danger?</button>
+    <button onclick="loadSentence()" id="369">You are a good teacher</button>
+    <button onclick="loadSentence()" id="370">You can read this book</button>
+    <button onclick="loadSentence()" id="371">You don’t understand me</button>
+    <button onclick="loadSentence()" id="372">You have to study hard</button>
+    <button onclick="loadSentence()" id="373">Where do you have pain?</button>
+    <button onclick="loadSentence()" id="374">They are both in the room</button>
+    <button onclick="loadSentence()" id="375">That house is very small</button>
+    <button onclick="loadSentence()" id="376">Please give me your hand</button>
+    <button onclick="loadSentence()" id="377">Please go to the school</button>
+    <button onclick="loadSentence()" id="378">Please sit here and wait</button>
+    <button onclick="loadSentence()" id="379">Please speak more slowly</button>
+    <button onclick="loadSentence()" id="380">My father is in his room</button>
+    <button onclick="loadSentence()" id="381">May I ask you something?</button>
+    <button onclick="loadSentence()" id="382">May I ask you a question?</button>
+    <button onclick="loadSentence()" id="383">Is the job still available?</button>
+    <button onclick="loadSentence()" id="384">I arrived there too early</button>
+    <button onclick="loadSentence()" id="385">Do you have a family?</button>
+    <button onclick="loadSentence()" id="386">Do you have any problem?</button>
+    <button onclick="loadSentence()" id="387">Do you have any idea?</button>
+    <button onclick="loadSentence()" id="388">Did you finish the job?</button>
+    <button onclick="loadSentence()" id="389">Did you like the movie?</button>
+    <button onclick="loadSentence()" id="390">Are we ready to go now?</button>
+    <button onclick="loadSentence()" id="391">Would you like to come?</button>
+    <button onclick="loadSentence()" id="392">I don’t speak very well</button>
+    <br><br>
+
+    <!--
+    Transcribed text: <span id="transcribedText"></span>
+    -->
+    <p>Transcribed text recorded here: </p> 
+    <button onclick="saveTextAsFile()">Save Text</button>
+    <button onclick="loadTextAsFile()">Load Text</button>
+    <input id="myFile" type="file"/><br>
+    <textarea rows="20" cols="80" id="multipleText" ></textarea>
+
+    <script>
+      document.getElementById('myFile').addEventListener('change', function() {
+          var file = this.files[0];
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              var textArea = document.getElementById("multipleText");
+              textArea.value = e.target.result;
+          };
+          reader.readAsText(file);
+      });
+    </script>
+    
+
+    <p id="allvoices"></p>
+
+
+    <script>
+
+      function chinese_to_8() {
+        // translate Chinese to 8 languages
+        const subscriptionKey = '6e77a116c2a34b899f56115a3031676c';
+        const endpoint = 'https://api.cognitive.microsofttranslator.com';
+        const location = 'eastasia';
+
+        const textToTranslate = document.getElementById('textInput').value;
+        const url = endpoint + '/translate?api-version=3.0&from=zh-Hans&to=en&to=zh-Hans&to=ja&to=es&to=fr&to=de&to=ru&to=ar';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Ocp-Apim-Subscription-Key': subscriptionKey,
+                'Ocp-Apim-Subscription-Region': location,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([{ 'Text': textToTranslate }])
+        })
+        .then(response => response.json())
+        .then(data => {
+            const translationResult_en = data[0].translations[0].text;
+            const translationResult_cn = data[0].translations[1].text;
+            const translationResult_ja = data[0].translations[2].text;
+            const translationResult_es = data[0].translations[3].text;
+            const translationResult_fr = data[0].translations[4].text;
+            const translationResult_de = data[0].translations[5].text;
+            const translationResult_ru = data[0].translations[6].text;
+            const translationResult_ar = data[0].translations[7].text;
+            document.getElementById('EnglishText').value = translationResult_en;
+            document.getElementById('ChineseText').value = translationResult_cn;
+            document.getElementById('JapaneseText').value = translationResult_ja;
+            document.getElementById('SpanishText').value = translationResult_es;
+            document.getElementById('FrenchText').value = translationResult_fr;
+            document.getElementById('GermanText').value = translationResult_de;
+            document.getElementById('RussianText').value = translationResult_ru;
+            document.getElementById('ArabicText').value = translationResult_ar;
+        })
+        .catch(error => console.error(error))
+      }
+
+      function speak() {
+        // get the input text, synthesis the text to speech, set the speech language
+        // then play the speech by audio
+        let textInput = document.getElementById('textInput').value;
+        let msg = new SpeechSynthesisUtterance(textInput);
+
+        var radios = document.getElementsByName('language');
+        var selectedValue;
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                selectedValue = radios[i].value;
+                break;
+            }
+        }
+
+        msg.lang = selectedValue;
+        //msg.lang = document.getElementById('languageSelect').value;
+        window.speechSynthesis.speak(msg);
+     
+        // 用特大号字体显示用户输入的想要播放的文字
+        document.getElementById('display').innerHTML = document.getElementById('textInput').value;
+     
+      } // end of function speak()
+
+      function speak_and_translate() {
+        // get the input text, synthesis the text to speech, set the speech language
+        // then play the speech by audio
+        let textInput = document.getElementById('textInput').value;
+        let msg = new SpeechSynthesisUtterance(textInput);
+        var radios = document.getElementsByName('language');
+        var selectedValue;
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                selectedValue = radios[i].value;
+                break;
+            }
+        }
+        msg.lang = selectedValue;
+        window.speechSynthesis.speak(msg);
+     
+        // 用特大号字体显示用户输入的想要播放的文字
+        document.getElementById('display').innerHTML = document.getElementById('textInput').value;
+     
+        // translate Chinese to 8 languages
+        const subscriptionKey = '6e77a116c2a34b899f56115a3031676c';
+        const endpoint = 'https://api.cognitive.microsofttranslator.com';
+        const location = 'eastasia';
+
+        const textToTranslate = document.getElementById('textInput').value;
+        const url = endpoint + '/translate?api-version=3.0&from=zh-Hans&to=en&to=zh-Hans&to=ja&to=es&to=fr&to=de&to=ru&to=ar';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Ocp-Apim-Subscription-Key': subscriptionKey,
+                'Ocp-Apim-Subscription-Region': location,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([{ 'Text': textToTranslate }])
+        })
+        .then(response => response.json())
+        .then(data => {
+            const translationResult_en = data[0].translations[0].text;
+            const translationResult_cn = data[0].translations[1].text;
+            const translationResult_ja = data[0].translations[2].text;
+            const translationResult_es = data[0].translations[3].text;
+            const translationResult_fr = data[0].translations[4].text;
+            const translationResult_de = data[0].translations[5].text;
+            const translationResult_ru = data[0].translations[6].text;
+            const translationResult_ar = data[0].translations[7].text;
+            document.getElementById('EnglishText').value = translationResult_en;
+            document.getElementById('ChineseText').value = translationResult_cn;
+            document.getElementById('JapaneseText').value = translationResult_ja;
+            document.getElementById('SpanishText').value = translationResult_es;
+            document.getElementById('FrenchText').value = translationResult_fr;
+            document.getElementById('GermanText').value = translationResult_de;
+            document.getElementById('RussianText').value = translationResult_ru;
+            document.getElementById('ArabicText').value = translationResult_ar;
+        })
+        .catch(error => console.error(error))
+      } // end of function speak_and_translate()
+
+
+
+      // 接受用户的语音输入，并转录成对应的文字
+      function startVoiceInput() {
+        let speakout = '' // 想要翻译后的英语文本，将它说出来
+        let recognition = new webkitSpeechRecognition();
+        var radios = document.getElementsByName('language');
+        var selectedValue;
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                selectedValue = radios[i].value;
+                break;
+            }
+        }
+        recognition.lang = selectedValue;
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onresult = function(event) {
+          let transcript = event.results[0][0].transcript;         
+          document.getElementById('multipleText').textContent += transcript + '\n';
+          document.getElementById('textInput').value = transcript;
+
+          // translate Chinese to 8 languages
+          const subscriptionKey = '6e77a116c2a34b899f56115a3031676c';
+          const endpoint = 'https://api.cognitive.microsofttranslator.com';
+          const location = 'eastasia';
+          const textToTranslate = document.getElementById('textInput').value;
+          const url = endpoint + '/translate?api-version=3.0&from=zh-Hans&to=en&to=zh-Hans&to=ja&to=es&to=fr&to=de&to=ru&to=ar';
+
+          fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Ocp-Apim-Subscription-Key': subscriptionKey,
+                  'Ocp-Apim-Subscription-Region': location,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify([{ 'Text': textToTranslate }])
+          })
+          .then(response => response.json())
+          .then(data => {
+              const translationResult_en = data[0].translations[0].text;
+              const translationResult_cn = data[0].translations[1].text;
+              const translationResult_ja = data[0].translations[2].text;
+              const translationResult_es = data[0].translations[3].text;
+              const translationResult_fr = data[0].translations[4].text;
+              const translationResult_de = data[0].translations[5].text;
+              const translationResult_ru = data[0].translations[6].text;
+              const translationResult_ar = data[0].translations[7].text;
+              document.getElementById('EnglishText').value = translationResult_en;
+              document.getElementById('ChineseText').value = translationResult_cn;
+              document.getElementById('JapaneseText').value = translationResult_ja;
+              document.getElementById('SpanishText').value = translationResult_es;
+              document.getElementById('FrenchText').value = translationResult_fr;
+              document.getElementById('GermanText').value = translationResult_de;
+              document.getElementById('RussianText').value = translationResult_ru;
+              document.getElementById('ArabicText').value = translationResult_ar;
+              speakout = document.getElementById('EnglishText').value
+
+
+          })
+          .catch(error => console.error(error))
+
+          // 用特大号字体显示被语音识别的文字
+          document.getElementById('display').innerHTML = transcript;
+
+        }; // end of recognition.onresult
+
+        recognition.start(); // 开始启动语音识别
+
+        // // 用特大号字体显示被读出的文字
+        // document.getElementById('debug_info').innerHTML = "语音识别成功结束";
+
+        // // get the input text, synthesis the text to speech, set the speech language
+        // // then play the speech by audio
+        // //let textInput = document.getElementById('textInput').value;
+        // let msg = new SpeechSynthesisUtterance(speakout);
+        // // 用特大号字体显示被读出的文字
+        // document.getElementById('debug_info').innerHTML = "开始文字转语音";
+        // var radios = document.getElementsByName('language');
+        // var selectedValue;
+        // for (var i = 0; i < radios.length; i++) {
+        //     if (radios[i].checked) {
+        //         selectedValue = radios[i].value;
+        //         break;
+        //     }
+        // }
+        // msg.lang = selectedValue;
+        // document.getElementById('debug_info').innerHTML = msg.lang;
+        // msg.lang = 'en'; // 用英语说出来
+        // window.speechSynthesis.speak(msg);
+        // document.getElementById('debug_info').innerHTML = "语音合成完毕";
+      } // end of startVoiceInput()
+
+      function loadSentence(){
+        clicked_button_id = '';
+
+        fetch('8languages_update.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+
+        function appendData(data) {
+
+            var sentence_buttons = document.querySelectorAll("button");
+            sentence_buttons.forEach(function(button) {
+              button.addEventListener("click", function() {
+                clicked_button_id = this.id; // Output: the id of the clicked button
+              });
+            });
+
+            id_number = parseInt(clicked_button_id, 10) // 10表示十进制
+            console.log(id_number);
+
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].Index == id_number) {
+                document.getElementById('EnglishText').value = data[i].English;
+                document.getElementById('ChineseText').value = data[i].Chinese;
+                document.getElementById('JapaneseText').value = data[i].Japanese;
+                document.getElementById('SpanishText').value = data[i].Spanish;
+                document.getElementById('FrenchText').value = data[i].French;
+                document.getElementById('GermanText').value = data[i].German;                
+                document.getElementById('RussianText').value = data[i].Russian;
+                document.getElementById('ArabicText').value = data[i].Arabic;
+              } 
+            }
+        }
+      }
+
+      function speakEnglish() {
+        // Microsoft Ana Online (Natural) - English (United States)
+        let textInput = document.getElementById('EnglishText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Ana Online (Natural) - English (United States)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakChinese() {
+        // Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)
+        //let textInput = document.getElementById('ChineseText').value;
+        //let msg = new SpeechSynthesisUtterance(textInput);
+        //msg.lang = "zh-CN";
+        //window.speechSynthesis.speak(msg); 
+        let textInput = document.getElementById('ChineseText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakJapanese() {
+        // Microsoft Nanami Online (Natural) - Japanese (Japan)
+        let textInput = document.getElementById('JapaneseText').value;
+        var voices = window.speechSynthesis.getVoices();
+        // for(var i = 0; i < voices.length; i++) {
+        //   document.getElementById('allvoices').innerHTML += voices[i].name + '<br>';
+        // }
+
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Nanami Online (Natural) - Japanese (Japan)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakSpanish() {
+        // Microsoft Elvira Online (Natural) - Spanish (Spain)
+        //let textInput = document.getElementById('SpanishText').value;
+        //let msg = new SpeechSynthesisUtterance(textInput);
+        //msg.lang = "es-ES";
+        //window.speechSynthesis.speak(msg); 
+        let textInput = document.getElementById('SpanishText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Elvira Online (Natural) - Spanish (Spain)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakFrench() {
+        // Microsoft Eloise Online (Natural) - French (France)
+        //let textInput = document.getElementById('FrenchText').value;
+        //let msg = new SpeechSynthesisUtterance(textInput);
+        //msg.lang = "fr-FR";
+        //window.speechSynthesis.speak(msg); 
+        let textInput = document.getElementById('FrenchText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Eloise Online (Natural) - French (France)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakGerman() {
+        // Microsoft Amala Online (Natural) - German (Germany)
+        //let textInput = document.getElementById('GermanText').value;
+        //let msg = new SpeechSynthesisUtterance(textInput);
+        //msg.lang = "de-DE";
+        //window.speechSynthesis.speak(msg); 
+        let textInput = document.getElementById('GermanText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Amala Online (Natural) - German (Germany)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakRussian() {
+        // Microsoft Svetlana Online (Natural) - Russian (Russia)
+        //let textInput = document.getElementById('RussianText').value;
+        //let msg = new SpeechSynthesisUtterance(textInput);
+        //msg.lang = "ru-RU";
+        //window.speechSynthesis.speak(msg); 
+        let textInput = document.getElementById('RussianText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Svetlana Online (Natural) - Russian (Russia)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function speakArabic() {
+        // Microsoft Zariyah Online (Natural) - Arabic (Saudi Arabia)
+        //let textInput = document.getElementById('ArabicText').value;
+        //let msg = new SpeechSynthesisUtterance(textInput);
+        //msg.lang = "ar-AR";
+        //window.speechSynthesis.speak(msg); 
+        let textInput = document.getElementById('ArabicText').value;
+        var voices = window.speechSynthesis.getVoices();
+        var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        for(var i = 0; i < voices.length; i++) {
+            // Only works in Microsoft Edge browser, not in Firefox or Chrome
+            // Need connect to Internet, sometimes delay is serious.
+            if(voices[i].name == 'Microsoft Zariyah Online (Natural) - Arabic (Saudi Arabia)') {
+                var utterance = new SpeechSynthesisUtterance(textInput);
+                utterance.voice = voices[i];
+                synth.speak(utterance);
+            }
+        }
+
+        // 用特大号字体显示被读出的文字
+        document.getElementById('display').innerHTML = textInput;
+      }
+
+      function saveTextAsFile() {
+        var textToWrite = document.getElementById('multipleText').value;
+        var textFileAsBlob = new Blob([textToWrite], {type: 'text/plain'});
+        var fileNameToSaveAs = "savedText.txt"; //filename.extension
+        var downloadLink = document.createElement("a");
+        downloadLink.download = fileNameToSaveAs;
+        downloadLink.innerHTML = "Download File";
+        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+      }
+
+    </script>
+  </body>
+</html>
